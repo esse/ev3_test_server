@@ -1,0 +1,2 @@
+Usage: run ev3_test_server.exe 1234
+Where 1234 is number of port. Server will automatically bind to first ip address available.
