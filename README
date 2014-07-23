@@ -1,4 +1,8 @@
-Usage: run ev3_test_server.exe 1234
-Where 1234 is number of port. Server will automatically bind to first ip address available.
+Usage: run ev3_test_server.exe [optional port] (as admin - or it will be unable to bind itself to port)
+Where 1234 is number of port. Server will automatically bind to localhost
+(which in nancy means 0.0.0.0 - so all ip addresses).
 
-(Under Linux / Mac OS X run using mono: mono ev3_test_server.exe 1234)
+(Under Linux / Mac OS X run using mono: mono ev3_test_server.exe [optional port])
+Mono version 3.x required.
+
+In this version graphic overview of projected robot movement is added.

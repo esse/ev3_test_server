@@ -14,6 +14,8 @@ namespace ev3_test_server
 
     public class MainModule : NancyModule
     {
+        public static View v;
+
         public MainModule()
         {
             Get["/"] = parameters =>
@@ -48,6 +50,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("FORWARD by " + parameters.apiID.Value);
+                MainModule.v.Invoke(new Action(() =>  MainModule.v.forward()));
                 //Program.brick.BatchCommand.TurnMotorAtSpeedForTime(OutputPort.B, 100, 1000, true);
                 //Program.brick.BatchCommand.TurnMotorAtPowerForTime(OutputPort.C, 100, 1000, true);
                 //Program.brick.BatchCommand.SendCommandAsync();
@@ -61,7 +64,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("SLOW FORWARD by " + parameters.apiID.Value);
-
+                MainModule.v.Invoke(new Action(() => MainModule.v.slow_forward()));
                 return "OK";
             };
 
@@ -72,7 +75,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("LEFT by " + parameters.apiID.Value);
-
+                MainModule.v.Invoke(new Action(() => MainModule.v.rotateLeft()));
                 return "OK";
             };
 
@@ -83,7 +86,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("RIGHT by " + parameters.apiID.Value);
-
+                MainModule.v.Invoke(new Action(() => MainModule.v.rotateRight()));
                 return "OK";
             };
 
@@ -94,7 +97,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("BACKWARDS by " + parameters.apiID.Value);
-
+                MainModule.v.Invoke(new Action(() => MainModule.v.backward()));
                 return "OK";
             };
 
@@ -105,7 +108,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("SLOW BACKWARD by " + parameters.apiID.Value);
-
+                MainModule.v.Invoke(new Action(() => MainModule.v.slow_backward()));
                 return "OK";
             };
 
@@ -116,7 +119,7 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("ATTACK by " + parameters.apiID.Value);
-
+                MainModule.v.Invoke(new Action(() => MainModule.v.attack()));
                 return "OK";
             };
 
@@ -127,7 +130,6 @@ namespace ev3_test_server
                     return "API Needs to be locked first";
                 }
                 Console.WriteLine("RUN ENGINE A - test");
-
                 return "OK";
             };
         }
@@ -149,18 +151,26 @@ namespace ev3_test_server
         {
 
             System.Console.WriteLine("Starting test API");
-            Uri url = new Uri("http://" +
-                Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork) +
-                ":" + args[0]);
-                //":1235");
+            Uri url;
+            if (args.Length < 1)
+            {
+                url = new Uri("http://" +
+                               "localhost" +
+                               ":" +  "1234");
+            }
+            else
+            {
+                url = new Uri("http://" +
+                              "localhost" +
+                              ":" + args[0]);
+            }
             using (var host = new NancyHost(url))
             {
                 host.Start();
                 System.Console.WriteLine("Started HTTP Server on " + url);
-                while (true)
-                {
-                    Console.ReadLine();
-                }
+                MainModule.v = new View();
+                MainModule.v.init();
+                System.Windows.Forms.Application.Run(MainModule.v);
             }
 
 
