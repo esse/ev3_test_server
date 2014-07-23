@@ -1,4 +1,5 @@
-Usage: run ev3_test_server.exe 1234
+Usage: run ev3_test_server.exe 1234 (as an admin!)
 Where 1234 is number of port. Server will automatically bind to first ip address available.
 
 (Under Linux / Mac OS X run using mono: mono ev3_test_server.exe 1234)
+Mono 3.x required.
